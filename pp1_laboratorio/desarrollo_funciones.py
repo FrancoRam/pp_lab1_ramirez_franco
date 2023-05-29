@@ -26,7 +26,9 @@ def mostrar_jugador_y_posicion(lista:list):
     '''
     if(bool(lista)):
         for jugador in lista_jugadores:
-            print(jugador['nombre']," | ",jugador['posicion'])
+            print("-------------------------------------------")
+            print(jugador['nombre'],"\t\t|\t",jugador['posicion'])
+            print("-------------------------------------------")
     else:
         print("error 01 - La lista es vacía")
 
@@ -345,7 +347,7 @@ def calcular_max(lista:list, key):
             if(superheroe['estadisticas'][key] > max_valor):
                 max_valor = superheroe['estadisticas'][key]
                 nombre_max_valor = superheroe['nombre']
-        ret = ("\n\t** INFORME **:\nMayor jugador con {0}:\nNombre: {1} | {0}: {2}".format(quitar_guiones_bajo(key), nombre_max_valor, max_valor))
+        ret = ("\n\t** INFORME **:\nJugador con mayor {0}:\nNombre: {1} | {0}: {2}".format(quitar_guiones_bajo(key), nombre_max_valor, max_valor))
     return ret
 #----------------------------------------
 #
@@ -360,10 +362,10 @@ def calcular_min(lista:list, key):
             if(superheroe['estadisticas'][key] < min_valor):
                 min_valor = superheroe['estadisticas'][key]
                 nombre_min_valor = superheroe['nombre']
-        ret = ("\n\t** INFORME **:\nMenor jugador con {0}:\nNombre: {1} | {0}: {2}".format(quitar_guiones_bajo(key), nombre_min_valor, min_valor))
+        ret = ("\n\t** INFORME **:\nJugador con menor {0}:\nNombre: {1} | {0}: {2}".format(quitar_guiones_bajo(key), nombre_min_valor, min_valor))
     return ret
 #-----------------------------------------
-#
+#7-10 | 12-13
 def calcular_max_min_dato(lista:list, status:str, key:str)->str:
     ret=-1
     if(bool(lista)):
@@ -382,8 +384,53 @@ def quitar_guiones_bajo(cadena)->str:
     else:
         print("cadena vacía")
     return nueva_cadena
-#7
+#10-11
+def mostrar_promedios_mayores_a(lista:list, key:str):
+    ret = False
+    lista_aux = []
+    if(bool(list)):
+        while(True):
+            valor = input("Ingrese el valor de referencia para mostrar los jugadores que lo superan: ")
+            if es_numero_range(valor,1,40000):
+                for jugador in lista:
+                    if(jugador['estadisticas'][key] >= float(valor)):
+                        lista_aux.append(jugador)
+                if bool(lista_aux):
+                   mostrar_nombre_y_caracteristica_jugador(lista_aux,key) 
+                else:
+                    print("sin coincidencias")
+                break
+            else:
+                print("ERROR - Ingrese un VALOR correcto")
 
+    else:
+        print("ERROR - lista vacía ")
+
+    return ret
+
+def es_numero_range(valor, min, max):
+    ret = False
+    if(valor.isdigit()):
+        valor = float(valor)
+        if ((valor > min and valor < max)):
+            ret = True
+    return ret
+
+def mostrar_nombre_y_caracteristica_jugador(lista:list, key:str):
+    ret = False
+    if(bool(lista)):
+        ret = True
+        for jugador in lista:
+            print("\n-----------------------------------------")
+            print("Nombre: {0}  -   Posicion: {1}\n{2}: {3}".format(
+                                        jugador['nombre'],
+                                        jugador['posicion'],
+                                        quitar_guiones_bajo(key),
+                                        jugador['estadisticas'][key]))
+            print("-----------------------------------------")
+    else:
+        print("ERROR - la lista auxiliar es vacía")
+    return ret
 
 
 #----------------------------- MENU --------------------------------
@@ -444,15 +491,15 @@ def dream_team_app(lista:list):
         elif opcion == 9:
             print(calcular_max_min_dato(lista_jugadores,"maximo", 'asistencias_totales'))
         elif opcion == 10:
-            pass
+            mostrar_promedios_mayores_a(lista_jugadores, "promedio_puntos_por_partido")
         elif opcion == 11:
-            pass
+            mostrar_promedios_mayores_a(lista_jugadores, "promedio_rebotes_por_partido")           
         elif opcion == 12:
-            pass
+            mostrar_promedios_mayores_a(lista_jugadores, "promedio_asistencias_por_partido")           
         elif opcion == 13:
-            pass
+            print(calcular_max_min_dato(lista_jugadores,"maximo", 'robos_totales'))
         elif opcion == 14:
-            pass
+            print(calcular_max_min_dato(lista_jugadores,"maximo", 'bloqueos_totales'))
         elif opcion == 15:
             pass
         elif opcion == 16:
