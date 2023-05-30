@@ -243,16 +243,15 @@ def calcular_promedio(lista:list, key)->float:
                 acumulador = acumulador + jugador['estadisticas'][key]
                 contador = contador + 1
         promedio = dividir(acumulador, contador)
-        
     else:
-        print("error - lista vacía - calcular_promedio()")
+        print("error - lista_aux vacía - calcular_promedio()")
 
     return promedio
 
 def mostrar_promedio_puntos_por_partido(lista:list,key:str):
     if(bool(lista)):
         promedio=calcular_promedio(lista,key)
-        print("El promedio de puntos por partido de TODO el equipo es de: {0:.2f} puntos".format(promedio))
+        print("El promedio de puntos por partido de TODO el equipo es de: {0:.2f} puntos\n".format(promedio))
     else:
         print("ERROR - la lista es vacía - mostrar_promedio_por_puntos_partido()")
 
@@ -293,6 +292,43 @@ def quick_sort(lista: list, key: str, orden: str) -> list:
     lista_izq.extend(lista_der)
 
     return lista_izq
+
+def quick_sort_extendida(lista: list, key: str,key2:str, orden: str) -> list:
+    """
+    Ordena la 'lista' de manera 'orden' ("asc"/"desc") teniendo en cuenta la 'key'
+
+    Args:
+        lista : (list)
+        key: (str): 
+        orden: (str)
+
+    return:
+        lista_izq: (list)
+    """
+    if len(lista) <= 1:
+        return lista
+    lista_izq = []
+    lista_der = []
+    pivot = lista[0]
+
+    for player in lista[1:]:
+        if orden == "asc":
+            if player[key2][key] > pivot[key2][key]:
+                lista_der.append(player)
+            else:
+                lista_izq.append(player)
+        elif orden == "desc":
+            if player[key2][key] > pivot[key2][key]:
+                lista_der.append(player)
+            else:
+                lista_izq.append(player)
+    lista_izq = quick_sort_extendida(lista_izq, key, key2, orden)
+    lista_izq.append(pivot)
+    lista_der = quick_sort_extendida(lista_der, key, key2, orden)
+    lista_izq.extend(lista_der)
+
+    return lista_izq
+
 #5
 def mostrar_promedio_puntos_partido_y_ordenar(lista:list, key:str, orden:str):
     if(bool(lista)):
@@ -432,6 +468,8 @@ def mostrar_nombre_y_caracteristica_jugador(lista:list, key:str):
         print("ERROR - la lista auxiliar es vacía")
     return ret
 
+# 23 BONUS ---------------------------------------------------------------------------
+
 
 #----------------------------- MENU --------------------------------
 def imprimir_menu():
@@ -440,12 +478,27 @@ def imprimir_menu():
     print("\n\n")
     print("------------------------------------------------")
     print("\tMENÚ DE OPCIONES:")
-    print("1. Mostrar el nombre de cada Superhéroe")
-    print("2. Mostrar el nombre de cada Superhéroe y su altura")
-    print("3. Mostrar al Superhéroe más alto")
-    print("4. Mostrar al Superhéroe más bajo")
-    print("5. Mostrar el promedio de altura de los Súperheroes")
-    print("6. Mostrar el peso del Súperhéroe más pesado y del más liviano")
+    print("1. Mostrar el nombre y posicion de cada jugador")
+    print("2. Mostrar estadísticas de jugador a traves de su índice")
+    print("3. Convertir a archivo CSV")
+    print("4. Buscar por nombre un jugador y mostrar sus Logros en NBA")
+    print("5. Calcular y mostrar el promedio de puntos por partido")
+    print("6. Ingresar y mostrar si jugador pertenece Salón de la Fama del Baloncesto.")
+    print("7. Calcular y mostrar el jugador con la mayor cantidad de rebotes totales")
+    print("8. Calcular y mostrar el jugador con el mayor porcentaje de tiros de campo")
+    print("9. Calcular y mostrar el jugador con la mayor cantidad de asistencias totales")
+    print("10. Mostrar los jugadores que han promediado más puntos por partido por valor ingresado")
+    print("11. Mostrar los jugadores que han promediado más rebotes por partido por valor ingresado")
+    print("12. Mostrar los jugadores que han promediado más asistencias por partido por valor ingresado")
+    print("13. Calcular y mostrar el jugador con la mayor cantidad de robos totales")
+    print("14. Calcular y mostrar el jugador con la mayor cantidad de bloqueos totales")
+    print("15. Mostrar los jugadores que hayan tenido un porcentaje de tiros libres superior a valor ingresado")
+    print("16. Calcular y mostrar el promedio de puntos por partido del equipo excluyendo al jugador con la menor cantidad de puntos por partido.")
+    print("17. Calcular y mostrar el jugador con la mayor cantidad de logros obtenidos")
+    print("18. mostrar los jugadores que hayan tenido un porcentaje de tiros triples superior a valor ingresado")
+    print("19. Calcular y mostrar el jugador con la mayor cantidad de temporadas jugadas")
+    print("20. mostrar los jugadores , ordenados por posición en la cancha, que hayan tenido un porcentaje de tiros de campo superior a ese valor")
+    print("23. bonus")
     print("0. Salir del programa")
     print("------------------------------------------------")
     print("\n\n")
@@ -481,27 +534,27 @@ def dream_team_app(lista:list):
         elif opcion == 4:
             buscar_y_mostrar_por_jugador(lista)
         elif opcion == 5:
-            mostrar_promedio_puntos_partido_y_ordenar(lista_jugadores, 'promedio_puntos_por_partido', 'asc')
+            mostrar_promedio_puntos_partido_y_ordenar(lista, 'promedio_puntos_por_partido', 'asc')
         elif opcion == 6:
-            ingresar_y_mostrar_jugador(lista_jugadores)
+            ingresar_y_mostrar_jugador(lista)
         elif opcion == 7:
-            print(calcular_max_min_dato(lista_jugadores,"maximo", 'rebotes_totales'))
+            print(calcular_max_min_dato(lista,"maximo", 'rebotes_totales'))
         elif opcion == 8:
-            print(calcular_max_min_dato(lista_jugadores,"maximo", 'porcentaje_tiros_de_campo'))
+            print(calcular_max_min_dato(lista,"maximo", 'porcentaje_tiros_de_campo'))
         elif opcion == 9:
-            print(calcular_max_min_dato(lista_jugadores,"maximo", 'asistencias_totales'))
+            print(calcular_max_min_dato(lista,"maximo", 'asistencias_totales'))
         elif opcion == 10:
-            mostrar_promedios_mayores_a(lista_jugadores, "promedio_puntos_por_partido")
+            mostrar_promedios_mayores_a(lista, "promedio_puntos_por_partido")
         elif opcion == 11:
-            mostrar_promedios_mayores_a(lista_jugadores, "promedio_rebotes_por_partido")           
+            mostrar_promedios_mayores_a(lista, "promedio_rebotes_por_partido")           
         elif opcion == 12:
-            mostrar_promedios_mayores_a(lista_jugadores, "promedio_asistencias_por_partido")           
+            mostrar_promedios_mayores_a(lista, "promedio_asistencias_por_partido")           
         elif opcion == 13:
-            print(calcular_max_min_dato(lista_jugadores,"maximo", 'robos_totales'))
+            print(calcular_max_min_dato(lista,"maximo", 'robos_totales'))
         elif opcion == 14:
-            print(calcular_max_min_dato(lista_jugadores,"maximo", 'bloqueos_totales'))
+            print(calcular_max_min_dato(lista,"maximo", 'bloqueos_totales'))
         elif opcion == 15:
-            pass
+            mostrar_promedios_mayores_a(lista, "porcentaje_tiros_libres")
         elif opcion == 16:
             pass
         elif opcion == 17:
@@ -510,7 +563,7 @@ def dream_team_app(lista:list):
             pass
         elif opcion == 19:
             pass
-        elif opcion == 20:
+        elif opcion == 23:
             pass
 
         elif opcion == -1:
