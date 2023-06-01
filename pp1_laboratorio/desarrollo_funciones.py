@@ -318,7 +318,7 @@ def quick_sort_extendida(lista: list, key: str,key2:str, orden: str) -> list:
             else:
                 lista_izq.append(player)
         elif orden == "desc":
-            if player[key2][key] > pivot[key2][key]:
+            if player[key2][key] < pivot[key2][key]:
                 lista_der.append(player)
             else:
                 lista_izq.append(player)
@@ -328,6 +328,36 @@ def quick_sort_extendida(lista: list, key: str,key2:str, orden: str) -> list:
     lista_izq.extend(lista_der)
 
     return lista_izq
+#---------------------------------
+def bubble_sort(lista: list, key: str, sentido: str):
+    flag_swap = True
+    rango = len(lista)
+    while flag_swap:
+        rango = rango - 1
+        flag_swap = False
+        for indice in range(rango):
+            if sentido == "mayor":
+                if (lista[indice]["estadisticas"][key] > lista[indice + 1]["estadisticas"][key]):
+                    lista[indice], lista[indice + 1] = (lista[indice + 1],lista[indice],)
+            else:
+                if (lista[indice]["estadisticas"][key] < lista[indice + 1]["estadisticas"][key]):
+                    lista[indice], lista[indice + 1] = (lista[indice + 1], lista[indice],)
+
+def bubble_sort_lite(lista: list, key: str, sentido: str):
+    for indice in range(len(lista) - 1):
+        if sentido == "mayor":
+            if (lista[indice]["estadisticas"][key] > lista[indice + 1]["estadisticas"][key]):
+                lista[indice], lista[indice + 1] = (lista[indice + 1],lista[indice],)
+        elif sentido == "desc":
+            if (lista[indice]["estadisticas"][key] < lista[indice + 1]["estadisticas"][key]):
+                lista[indice], lista[indice + 1] = (lista[indice + 1],lista[indice],)
+
+
+def bubble_sort_asc(lista: list, key: str):
+    for indice in range(len(lista) - 1):
+        if len(lista[indice][key]) > len(lista[indice + 1][key]):
+            lista[indice], lista[indice + 1] = (lista[indice + 1],lista[indice],)
+
 
 #5
 def mostrar_promedio_puntos_partido_y_ordenar(lista:list, key:str, orden:str):
@@ -380,7 +410,7 @@ def calcular_max(lista:list, key):
         max_valor = lista[0]['estadisticas'][key]
         nombre_max_valor = lista[0]['nombre']
         for superheroe in lista:
-            if(superheroe['estadisticas'][key] > max_valor):
+            if(superheroe['estadisticas'][key] >= max_valor):
                 max_valor = superheroe['estadisticas'][key]
                 nombre_max_valor = superheroe['nombre']
         ret = ("\n\t** INFORME **:\nJugador con mayor {0}:\nNombre: {1} | {0}: {2}".format(quitar_guiones_bajo(key), nombre_max_valor, max_valor))
@@ -395,7 +425,7 @@ def calcular_min(lista:list, key):
         min_valor = lista[0]['estadisticas'][key]
         nombre_min_valor = lista[0]['nombre']
         for superheroe in lista:
-            if(superheroe['estadisticas'][key] < min_valor):
+            if(superheroe['estadisticas'][key] <= min_valor):
                 min_valor = superheroe['estadisticas'][key]
                 nombre_min_valor = superheroe['nombre']
         ret = ("\n\t** INFORME **:\nJugador con menor {0}:\nNombre: {1} | {0}: {2}".format(quitar_guiones_bajo(key), nombre_min_valor, min_valor))
@@ -467,8 +497,114 @@ def mostrar_nombre_y_caracteristica_jugador(lista:list, key:str):
     else:
         print("ERROR - la lista auxiliar es vacía")
     return ret
+#20
+def mostrar_promedios_mayores_a_sort(lista:list, key:str, key2:str):
+    ret = False
+    lista_aux = []
+    if(bool(list)):
+        while(True):
+            valor = input("Ingrese el valor de referencia para mostrar los jugadores que lo superan: ")
+            if es_numero_range(valor,1,40000):
+                for jugador in lista:
+                    if(jugador['estadisticas'][key] >= float(valor)):
+                        lista_aux.append(jugador)
+                if bool(lista_aux):
+                   lista_aux = quick_sort(lista_aux, key2,'asc')
+                   mostrar_nombre_y_caracteristica_jugador(lista_aux,key) 
+                else:
+                    print("sin coincidencias")
+                break
+            else:
+                print("ERROR - Ingrese un VALOR correcto")
+
+    else:
+        print("ERROR - lista vacía ")
+
+    return ret
+#-----------------------------------------------------------------------
+def calcular_promedio_prueba(lista:list, key, bandera)->float:
+    '''
+        calcula el promedio de 'key'
+        
+        Args:
+            lista (list): una lista de diccionarios que contienen características de jugadores del Dream Team.  
+            key (str): clave perteneciente a un diccionario
+        return:
+            retorna el resultado de la división.
+    '''
+    promedio = -1
+    if(bool(lista) and bandera == True):
+        acumulador = 0
+        contador = 0
+        for jugador in lista:
+            #obs: si los valores de los promedios(float) no estuvieran normalizados habría que hacerlo.
+            if(bool(jugador) and type(jugador) == dict and (type(jugador['estadisticas'][key]) == int or type(jugador['estadisticas'][key]) == float)):
+                acumulador = acumulador + jugador['estadisticas'][key]
+                contador = contador + 1
+        promedio = dividir(acumulador, contador)
+    else:
+        if(bool(lista) and bandera == False):
+            #lista =[]
+            lista = quick_sort_extendida(lista, key, 'estadisticas', 'asc')
+
+            acumulador = 0
+            contador = 0
+            for indice in range(len(lista)-1):
+                if(bool(lista[indice]) and type(lista[indice]) == dict and (type(lista[indice]['estadisticas'][key]) == int or type(lista[indice]['estadisticas'][key]) == float)):
+                    acumulador = acumulador + lista[indice]['estadisticas'][key]
+                    contador = contador + 1
+                    
+                    
+            promedio = dividir(acumulador, contador)
+        else:
+            print("error - lista_aux vacía - calcular_promedio()")
+
+    return promedio
+#------------------------------------------------------------
+#16-18
+def mostrar_promedio_jugadores_menos_uno(lista:list, key:str, bandera:bool):
+    promedio = calcular_promedio_prueba(lista, key, bandera)
+    print("------------------------")
+    print("\t*** INFORME ***")
+    print("{0} de los jugadores: {1:.2f}".format(quitar_guiones_bajo(key), promedio))
+    print("------------------------")
 
 # 23 BONUS ---------------------------------------------------------------------------
+def exportar_tabla_posiciones_csv(lista: list, nombre_archivo):
+    with open(nombre_archivo, "a") as archivo:
+        formato_csv = "{0},{1},{2},{3},{4}\n".format(
+            lista[0],
+            lista[1],
+            lista[2],
+            lista[3],
+            lista[4],)
+        archivo.write(formato_csv)
+
+
+def calcular_posicion(lista: list, key: str, indice_jugador: int):
+    posicion_jugador = 0
+    lista_aux = quick_sort_extendida(lista, key,'estadisticas', "asc")
+    for indice in range(len(lista_aux)):
+        if (lista_aux[indice]["estadisticas"][key]
+            == lista[indice_jugador]["estadisticas"][key]):
+            posicion_jugador = indice + 1
+
+    return posicion_jugador
+
+
+def bonus_jugadores(lista):
+    lista_encabezado = ["nombre", "puntos", "rebotes", "asistencias", "robos"]
+    exportar_tabla_posiciones_csv(lista_encabezado, "posiciones_jugadores.csv")
+    
+    for indice in range(len(lista)):
+        lista_jugador_posiciones = []
+        lista_jugador_posiciones.append(lista[indice]["nombre"])
+        lista_jugador_posiciones.append(calcular_posicion(lista, "puntos_totales", indice))    
+        lista_jugador_posiciones.append(calcular_posicion(lista, "rebotes_totales", indice))
+        lista_jugador_posiciones.append(calcular_posicion(lista, "asistencias_totales", indice))
+        lista_jugador_posiciones.append(calcular_posicion(lista, "robos_totales", indice))
+        exportar_tabla_posiciones_csv(lista_jugador_posiciones, "posiciones_jugadores.csv")
+
 
 
 #----------------------------- MENU --------------------------------
@@ -517,7 +653,7 @@ def menu_principal():
     imprimir_menu()
     ingreso = input("Ingrese una de las opciones:  ")
     
-    if validar_entero(ingreso) and ( int(ingreso) >= 0 and int(ingreso) <= 20):
+    if validar_entero(ingreso) and ( int(ingreso) >= 0 and int(ingreso) <= 27):
         ingreso = int(ingreso)
         ret = ingreso
     return ret
@@ -556,16 +692,18 @@ def dream_team_app(lista:list):
         elif opcion == 15:
             mostrar_promedios_mayores_a(lista, "porcentaje_tiros_libres")
         elif opcion == 16:
-            pass
+            mostrar_promedio_jugadores_menos_uno(lista, 'promedio_puntos_por_partido', bandera=False)
         elif opcion == 17:
             pass
         elif opcion == 18:
-            pass
+            mostrar_promedios_mayores_a_sort(lista, 'porcentaje_tiros_libres', 'nombre')
         elif opcion == 19:
-            pass
+            print(calcular_max_min_dato(lista, 'maximo', 'temporadas'))
+            #en este caso se debería utilizar otra función o modificar la utilizada para el caso de que exista más de un máximo.
+        elif opcion == 20:
+            mostrar_promedios_mayores_a_sort(lista, 'porcentaje_tiros_de_campo', 'posicion')
         elif opcion == 23:
-            pass
-
+            bonus_jugadores(lista_jugadores)
         elif opcion == -1:
             pass
         elif opcion == 0:
