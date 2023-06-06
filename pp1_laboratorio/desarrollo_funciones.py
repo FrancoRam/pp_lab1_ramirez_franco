@@ -569,6 +569,61 @@ def mostrar_promedio_jugadores_menos_uno(lista:list, key:str, bandera:bool):
     print("{0} de los jugadores: {1:.2f}".format(quitar_guiones_bajo(key), promedio))
     print("------------------------")
 
+#------------------------------------------------------------
+#17
+def definir_cantidad_de_logros(lista:list, key:str):
+    lista_total =[]
+    lista_con_uno = 1
+    for indice in range(len(lista)):
+        lista_suma_logros = []
+        lista_aux_logros = []
+        lista_aux_logros = lista[indice][key]
+        for jugador in lista_aux_logros:
+
+            if re.match(r'(\d)', jugador):
+                cadena1 = re.findall(r'\d+', jugador)
+                log = "".join(cadena1)
+                log = int(log)
+                lista_suma_logros.append(log)
+
+            else:
+                lista_suma_logros.append(lista_con_uno)
+        lista_total.append(lista_suma_logros)
+    return lista_total
+
+
+def calcular_mayor_cantidad_logros(lista:list, key):
+    ret = False
+    if(bool(lista)):
+        lista_aux = []
+        lista_aux = definir_cantidad_de_logros(lista, key)
+        lista_cantidades=[]
+        
+        for logros in lista_aux:
+            lista_aux_logros = []
+            lista_aux_logros = logros
+            acumulador = 0
+            for logro in logros:
+                acumulador = acumulador + logro
+                
+            lista_cantidades.append(acumulador)
+        return lista_cantidades
+    
+def mostrar_mayor_cantidad_logros(lista:list, key:str):
+    ret = False
+    if(bool(lista)):
+        lista_aux = []
+        lista_aux = calcular_mayor_cantidad_logros(lista, key)
+        jugador_con_mayor_cantidad = lista_aux[0]
+        nombre_mayor_cantidad=lista[0]['nombre']
+        
+        for indice in range(len(lista_aux)):
+            if jugador_con_mayor_cantidad < lista_aux[indice]:
+                jugador_con_mayor_cantidad = lista_aux[indice]
+                nombre_mayor_cantidad=lista[indice]['nombre']
+        print("El jugador con mayor cantidad de logros es: {0} con {1} logros".format(nombre_mayor_cantidad, jugador_con_mayor_cantidad))
+        
+#------------------------------------------------------------
 # 23 BONUS ---------------------------------------------------------------------------
 def exportar_tabla_posiciones_csv(lista: list, nombre_archivo):
     with open(nombre_archivo, "a") as archivo:
@@ -694,7 +749,7 @@ def dream_team_app(lista:list):
         elif opcion == 16:
             mostrar_promedio_jugadores_menos_uno(lista, 'promedio_puntos_por_partido', bandera=False)
         elif opcion == 17:
-            pass
+            mostrar_mayor_cantidad_logros(lista_jugadores, 'logros')
         elif opcion == 18:
             mostrar_promedios_mayores_a_sort(lista, 'porcentaje_tiros_libres', 'nombre')
         elif opcion == 19:
